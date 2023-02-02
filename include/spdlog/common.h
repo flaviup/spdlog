@@ -178,7 +178,11 @@ using remove_cvref_t = typename std::remove_cv<typename std::remove_reference<T>
 template<class T, class Char = char>
 struct is_convertible_to_basic_format_string
     : std::integral_constant<bool,
+#if FMT_VERSION > 90100
+          std::is_convertible<T, fmt::basic_string_view<Char>>::value>
+#else
           std::is_convertible<T, fmt::basic_string_view<Char>>::value || std::is_same<remove_cvref_t<T>, fmt::basic_runtime<Char>>::value>
+#endif
 {};
 
 #    if defined(SPDLOG_WCHAR_FILENAMES) || defined(SPDLOG_WCHAR_TO_UTF8_SUPPORT)
